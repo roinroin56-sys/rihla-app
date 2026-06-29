@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>رحلتي</title>
+<style>
+  :root{
+    --bg:#0b0d11;
+    --bg-elev:#12151b;
+    --card:#161a21;
+    --card2:#1c212a;
+    --card3:#222833;
+    --accent:#2dd4a4;
+    --accent-dim:rgba(45,212,164,0.14);
+    --accent2:#4d9bf5;
+    --accent2-dim:rgba(77,155,245,0.14);
+    --accent3:#f0a93b;
+    --accent3-dim:rgba(240,169,59,0.14);
+    --danger:#ef4659;
+    --danger-dim:rgba(239,70,89,0.14);
+    --text:#eef0f4;
+    --muted:#838b9a;
+    --muted2:#5b6473;
+    --border:#222730;
+    --radius:18px;
+    --radius-sm:12px;
+    --shadow:0 4px 18px rgba(0,0,0,0.35);
+  }
+  html[data-theme="light"]{
+    --bg:#f4f5f7;
+    --bg-elev:#ffffff;
+    --card:#ffffff;
+    --card2:#eef0f3;
+    --card3:#e9ebef;
+    --accent:#1aa980;
+    --accent-dim:rgba(26,169,128,0.12);
+    --accent2:#2f74d4;
+    --accent2-dim:rgba(47,116,212,0.12);
+    --accent3:#c87f0a;
+    --accent3-dim:rgba(200,127,10,0.12);
+    --danger:#d6304a;
+    --danger-dim:rgba(214,48,74,0.12);
+    --text:#1b1e24;
+    --muted:#6b7280;
+    --muted2:#9aa1ad;
+    --border:#e1e4e9;
+    --shadow:0 4px 14px rgba(0,0,0,0.08);
+  }
+  html[data-theme="light"] body{background:var(--bg);}
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    height:100%;
+  }
+  body{
+    font-family:-apple-system,'Segoe UI',Tahoma,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overscroll-behavior-y:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .app{
+    max-width:520px;
+    margin:0 auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+
+  /* ===== Top bar ===== */
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:linear-gradient(180deg, var(--bg) 70%, rgba(11,13,17,0.85));
+    backdrop-filter:blur(6px);
+    padding:16px 18px 10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .topbar .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand .logo{
+    width:34px;height:34px;border-radius:11px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px;
+  }
+  .brand .title{font-size:17px;font-weight:800;letter-spacing:.2px;}
+  .brand .sub{font-size:11px;color:var(--muted);margin-top:1px;}
+  .topbar .icon-btn{
+    width:38px;height:38px;border-radius:12px;
+    background:var(--card2);
+    border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;
+    cursor:pointer;
+    color:var(--text);
+  }
+  .topbar .icon-btn:active{transform:scale(.94);}
+
+  /* ===== Pages ===== */
+  .pages{
+    flex:1;
+    position:relative;
+    padding:6px 16px 110px;
+  }
+  .page{display:none;}
+  .page.active{display:block;animation:fadeIn .22s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ===== Home page ===== */
+  .greeting{
+    padding:6px 4px 16px;
+  }
+  .greeting h2{
+    margin:0 0 2px;
+    font-size:21px;
+    font-weight:800;
+  }
+  .greeting p{
+    margin:0;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .summary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .summary-tile{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:14px 8px;
+    text-align:center;
+  }
+  .summary-tile .icon{font-size:20px;margin-bottom:6px;}
+  .summary-tile .val{font-size:22px;font-weight:800;line-height:1;}
+  .summary-tile .lbl{font-size:10.5px;color:var(--muted);margin-top:5px;}
+
+  .section-label{
+    font-size:13px;
+    color:var(--muted);
+    font-weight:700;
+    margin:4px 2px 10px;
+  }
+
+  .nav-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:16px;
+    margin-bottom:12px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    cursor:pointer;
+    box-shadow:var(--shadow);
+    transition:transform .15s;
+  }
+  .nav-card:active{transform:scale(.98);}
+  .nav-card .ring-wrap{
+    width:58px;height:58px;flex-shrink:0;position:relative;
+  }
+  .nav-card .ring-wrap svg{transform:rotate(-90deg);}
+  .nav-card .ring-num{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:800;
+  }
+  .nav-card .info{flex:1;min-width:0;}
+  .nav-card .info .name{font-size:15px;font-weight:700;margin-bottom:2px;}
+  .nav-card .info .meta{font-size:12px;color:var(--muted);}
+  .nav-card .chev{color:var(--muted2);font-size:18px;}
+
+  /* ===== Detail page ===== */
+  .detail-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 2px 18px;
+  }
+  .back-btn{
+    width:36px;height:36px;border-radius:11px;
+    background:var(--card2);
+    border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    font-size:16px;
+    flex-shrink:0;
+  }
+  .detail-header h2{font-size:18px;font-weight:800;margin:0;}
+
+  .hero-card{
+    background:linear-gradient(155deg,var(--card3),var(--card));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:26px 18px 22px;
+    text-align:center;
+    margin-bottom:16px;
+    box-shadow:var(--shadow);
+  }
+  .hero-ring{
+    width:148px;height:148px;
+    margin:0 auto 14px;
+    position:relative;
+  }
+  .hero-ring svg{transform:rotate(-90deg);}
+  .hero-ring-inner{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+  }
+  .hero-ring-inner .num{font-size:38px;font-weight:800;line-height:1;}
+  .hero-ring-inner .unit{font-size:12px;color:var(--muted);margin-top:3px;}
+  .hero-card .desc{font-size:13px;color:var(--muted);margin-top:4px;}
+
+  .stat-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .stat-box{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:13px 6px;
+    text-align:center;
+  }
+  .stat-box .v{font-size:18px;font-weight:800;}
+  .stat-box .l{font-size:10.5px;color:var(--muted);margin-top:4px;}
+
+  .stage-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:14px 16px;
+    margin-bottom:16px;
+  }
+  .stage-card .tag{
+    display:inline-block;
+    font-size:10.5px;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:20px;
+    margin-bottom:8px;
+  }
+  .stage-card p{margin:0;font-size:13.5px;line-height:1.6;}
+
+  .action-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .action-row button{
+    flex:1;
+    padding:14px 8px;
+    border-radius:var(--radius-sm);
+    border:1px solid transparent;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  .btn-danger{background:var(--danger-dim);color:var(--danger);border-color:rgba(239,70,89,0.3) !important;}
+  .btn-success{background:var(--accent-dim);color:var(--accent);border-color:rgba(45,212,164,0.3) !important;}
+  .action-row button:active{transform:scale(.97);}
+
+  /* ===== Notes (Samsung Notes style) ===== */
+  .notes-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+  }
+  .notes-header h3{font-size:15px;font-weight:800;margin:0;}
+  .add-note-btn{
+    width:34px;height:34px;border-radius:11px;
+    background:var(--accent);
+    color:#06140f;
+    border:none;
+    font-size:18px;
+    font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+  }
+  .add-note-btn:active{transform:scale(.93);}
+  .notes-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .note-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:13px;
+    cursor:pointer;
+    min-height:108px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    transition:transform .12s;
+  }
+  .note-card:active{transform:scale(.97);}
+  .note-card .nt{
+    font-size:13.5px;font-weight:700;
+    margin-bottom:5px;
+    overflow:hidden;text-overflow:ellipsis;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  }
+  .note-card .nb{
+    font-size:11.5px;color:var(--muted);
+    overflow:hidden;text-overflow:ellipsis;
+    display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;
+    flex:1;
+    white-space:pre-wrap;
+    line-height:1.5;
+  }
+  .note-card .nd{
+    font-size:10px;color:var(--muted2);
+    margin-top:8px;
+  }
+  .notes-empty{
+    grid-column:1/-1;
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    padding:40px 10px;
+  }
+  .notes-empty .e{font-size:30px;display:block;margin-bottom:8px;}
+
+  /* ===== Note editor (full page) ===== */
+  .note-editor{
+    position:fixed;
+    inset:0;
+    background:var(--bg);
+    z-index:50;
+    display:none;
+    flex-direction:column;
+    max-width:520px;
+    margin:0 auto;
+  }
+  .note-editor.show{display:flex;}
+  .editor-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 14px 10px;
+    border-bottom:1px solid var(--border);
+  }
+  .editor-top .left{display:flex;align-items:center;gap:10px;}
+  .editor-top .meta{font-size:11px;color:var(--muted);}
+  .editor-top .right{display:flex;gap:8px;}
+  .editor-icon{
+    width:36px;height:36px;border-radius:11px;
+    background:var(--card2);
+    border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    font-size:15px;
+  }
+  .editor-icon.danger{color:var(--danger);}
+  .editor-body{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 18px 40px;
+    display:flex;
+    flex-direction:column;
+  }
+  .editor-title{
+    width:100%;
+    border:none;
+    background:transparent;
+    color:var(--text);
+    font-size:21px;
+    font-weight:800;
+    margin-bottom:10px;
+    outline:none;
+    font-family:inherit;
+  }
+  .editor-title::placeholder{color:var(--muted2);}
+  .editor-text{
+    width:100%;
+    border:none;
+    background:transparent;
+    color:var(--text);
+    font-size:15.5px;
+    line-height:1.85;
+    outline:none;
+    resize:none;
+    flex:1;
+    min-height:300px;
+    font-family:inherit;
+  }
+  .editor-text::placeholder{color:var(--muted2);}
+
+  /* ===== Bottom nav ===== */
+  .bottomnav{
+    position:fixed;
+    bottom:0;left:0;right:0;
+    max-width:520px;
+    margin:0 auto;
+    background:var(--bg-elev);
+    border-top:1px solid var(--border);
+    display:flex;
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    z-index:30;
+  }
+  .bottomnav .nitem{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    padding:6px 0;
+    cursor:pointer;
+    color:var(--muted);
+    font-size:10.5px;
+    font-weight:600;
+  }
+  .bottomnav .nitem .ic{font-size:19px;}
+  .bottomnav .nitem.active{color:var(--accent);}
+
+  /* ===== Toast / modal ===== */
+  .toast{
+    position:fixed;
+    bottom:90px;left:50%;
+    transform:translateX(-50%) translateY(10px);
+    background:#252b35;
+    color:var(--text);
+    padding:11px 20px;
+    border-radius:30px;
+    font-size:13px;
+    border:1px solid var(--border);
+    opacity:0;
+    transition:opacity .25s, transform .25s;
+    pointer-events:none;
+    z-index:100;
+    box-shadow:var(--shadow);
+    max-width:88%;
+    text-align:center;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .modal-overlay{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.65);
+    display:none;
+    align-items:center;justify-content:center;
+    z-index:200;
+    padding:24px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal{
+    background:var(--card3);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:22px;
+    max-width:340px;
+    width:100%;
+    text-align:center;
+  }
+  .modal p{font-size:14.5px;color:var(--text);margin:0 0 20px;line-height:1.6;}
+  .modal .row{display:flex;gap:10px;}
+  .modal .row button{
+    flex:1;padding:12px;border-radius:12px;border:none;font-weight:700;cursor:pointer;font-size:14px;
+  }
+  .modal .confirm{background:var(--danger);color:#fff;}
+  .modal .cancel{background:var(--card2);color:var(--text);border:1px solid var(--border) !important;}
+
+  input[type=file]{display:none;}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">🌿</div>
+      <div>
+        <div class="title">رحلتي</div>
+        <div class="sub" id="todayLabel">—</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <div class="icon-btn" id="btnThemeToggle" title="تبديل الوضع">🌙</div>
+      <div class="icon-btn" id="btnExportTop" title="حفظ نسخة">⬇️</div>
+      <div class="icon-btn" id="btnImportTop" title="استيراد نسخة">⬆️</div>
+    </div>
+  </div>
+
+  <div class="pages">
+
+    <!-- ===== الصفحة الرئيسية ===== -->
+    <div class="page active" data-page="home">
+      <div class="greeting">
+        <h2 id="homeGreeting">أهلاً بك 👋</h2>
+        <p>تابع تقدمك اليوم خطوة بخطوة</p>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-tile">
+          <div class="icon">🚭</div>
+          <div class="val" id="sumSmoke">0</div>
+          <div class="lbl">يوم بلا تدخين</div>
+        </div>
+        <div class="summary-tile">
+          <div class="icon">🛡️</div>
+          <div class="val" id="sumSin">0</div>
+          <div class="lbl">يوم بلا ذنب</div>
+        </div>
+        <div class="summary-tile">
+          <div class="icon">🕌</div>
+          <div class="val" id="sumPray">0</div>
+          <div class="lbl">صلاة بوقتها</div>
+        </div>
+      </div>
+
+      <div class="section-label">عداداتك</div>
+
+      <div class="nav-card" data-goto="smoke">
+        <div class="ring-wrap">
+          <svg width="58" height="58"><circle cx="29" cy="29" r="24" stroke="#222730" stroke-width="6" fill="none"/><circle id="ringSmokeMini" cx="29" cy="29" r="24" stroke="#2dd4a4" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="151"/></svg>
+          <div class="ring-num" id="ringSmokeMiniNum">0</div>
+        </div>
+        <div class="info">
+          <div class="name">الإقلاع عن التدخين</div>
+          <div class="meta" id="smokeMetaHome">—</div>
+        </div>
+        <div class="chev">‹</div>
+      </div>
+
+      <div class="nav-card" data-goto="sin">
+        <div class="ring-wrap">
+          <svg width="58" height="58"><circle cx="29" cy="29" r="24" stroke="#222730" stroke-width="6" fill="none"/><circle id="ringSinMini" cx="29" cy="29" r="24" stroke="#4d9bf5" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="151"/></svg>
+          <div class="ring-num" id="ringSinMiniNum">0</div>
+        </div>
+        <div class="info">
+          <div class="name">الابتعاد عن الذنب</div>
+          <div class="meta" id="sinMetaHome">—</div>
+        </div>
+        <div class="chev">‹</div>
+      </div>
+
+      <div class="nav-card" data-goto="pray">
+        <div class="ring-wrap">
+          <svg width="58" height="58"><circle cx="29" cy="29" r="24" stroke="#222730" stroke-width="6" fill="none"/><circle id="ringPrayMini" cx="29" cy="29" r="24" stroke="#f0a93b" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="151"/></svg>
+          <div class="ring-num" id="ringPrayMiniNum">0</div>
+        </div>
+        <div class="info">
+          <div class="name">الصلاة في أول وقتها</div>
+          <div class="meta" id="prayMetaHome">—</div>
+        </div>
+        <div class="chev">‹</div>
+      </div>
+
+    </div>
+
+    <!-- ===== صفحة التدخين ===== -->
+    <div class="page" data-page="smoke">
+      <div class="detail-header">
+        <div class="back-btn" data-goto="home">‹</div>
+        <h2>الإقلاع عن التدخين</h2>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-ring">
+          <svg width="148" height="148">
+            <circle cx="74" cy="74" r="62" stroke="#222730" stroke-width="10" fill="none"/>
+            <circle id="ringSmoke" cx="74" cy="74" r="62" stroke="#2dd4a4" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="390" stroke-dashoffset="390"/>
+          </svg>
+          <div class="hero-ring-inner">
+            <div class="num" id="smoke-num">0</div>
+            <div class="unit">يوم متواصل</div>
+          </div>
+        </div>
+        <div class="desc">بدأت من <span id="smoke-since">-</span></div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box"><div class="v" id="smoke-best">0</div><div class="l">أفضل رقم</div></div>
+        <div class="stat-box"><div class="v" id="smoke-relapses">0</div><div class="l">انتكاسات</div></div>
+        <div class="stat-box"><div class="v" id="smoke-hours">0</div><div class="l">ساعة متواصلة</div></div>
+      </div>
+
+      <div class="stage-card">
+        <span class="tag" style="background:var(--accent-dim);color:var(--accent);">المرحلة الحالية</span>
+        <p id="smoke-stage">—</p>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-danger" data-action="relapse-smoke">⚠️ سجّل انتكاسة</button>
+      </div>
+
+      <div class="notes-header">
+        <h3>📝 دفتر الملاحظات</h3>
+        <div class="add-note-btn" data-new-note="smoke">+</div>
+      </div>
+      <div class="notes-grid" id="notes-smoke"></div>
+    </div>
+
+    <!-- ===== صفحة الذنوب ===== -->
+    <div class="page" data-page="sin">
+      <div class="detail-header">
+        <div class="back-btn" data-goto="home">‹</div>
+        <h2>الابتعاد عن الذنب</h2>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-ring">
+          <svg width="148" height="148">
+            <circle cx="74" cy="74" r="62" stroke="#222730" stroke-width="10" fill="none"/>
+            <circle id="ringSin" cx="74" cy="74" r="62" stroke="#4d9bf5" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="390" stroke-dashoffset="390"/>
+          </svg>
+          <div class="hero-ring-inner">
+            <div class="num" id="sin-num">0</div>
+            <div class="unit">يوم متواصل</div>
+          </div>
+        </div>
+        <div class="desc">بدأت من <span id="sin-since">-</span></div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box"><div class="v" id="sin-best">0</div><div class="l">أفضل رقم</div></div>
+        <div class="stat-box"><div class="v" id="sin-relapses">0</div><div class="l">انتكاسات</div></div>
+        <div class="stat-box"><div class="v" id="sin-notescount">0</div><div class="l">ملاحظة مسجّلة</div></div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-danger" data-action="relapse-sin">⚠️ سجّل انتكاسة</button>
+      </div>
+
+      <div class="notes-header">
+        <h3>📝 دفتر التحديات والملاحظات</h3>
+        <div class="add-note-btn" data-new-note="sin">+</div>
+      </div>
+      <div class="notes-grid" id="notes-sin"></div>
+    </div>
+
+    <!-- ===== صفحة الصلاة ===== -->
+    <div class="page" data-page="pray">
+      <div class="detail-header">
+        <div class="back-btn" data-goto="home">‹</div>
+        <h2>الصلاة في أول وقتها</h2>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-ring">
+          <svg width="148" height="148">
+            <circle cx="74" cy="74" r="62" stroke="#222730" stroke-width="10" fill="none"/>
+            <circle id="ringPray" cx="74" cy="74" r="62" stroke="#f0a93b" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="390" stroke-dashoffset="390"/>
+          </svg>
+          <div class="hero-ring-inner">
+            <div class="num" id="pray-num">0</div>
+            <div class="unit">يوم متواصل</div>
+          </div>
+        </div>
+        <div class="desc">آخر تسجيل: <span id="pray-since">-</span></div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box"><div class="v" id="pray-best">0</div><div class="l">أفضل رقم</div></div>
+        <div class="stat-box"><div class="v" id="pray-relapses">0</div><div class="l">انتكاسات</div></div>
+        <div class="stat-box"><div class="v" id="pray-notescount">0</div><div class="l">ملاحظة مسجّلة</div></div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-success" data-action="success-pray">✅ صلّيت بوقتها</button>
+        <button class="btn-danger" data-action="relapse-pray">⚠️ تأخرت</button>
+      </div>
+
+      <div class="notes-header">
+        <h3>📝 دفتر الملاحظات</h3>
+        <div class="add-note-btn" data-new-note="pray">+</div>
+      </div>
+      <div class="notes-grid" id="notes-pray"></div>
+    </div>
+
+  </div>
+
+  <div class="bottomnav">
+    <div class="nitem active" data-goto="home"><span class="ic">🏠</span><span>الرئيسية</span></div>
+    <div class="nitem" data-goto="smoke"><span class="ic">🚭</span><span>التدخين</span></div>
+    <div class="nitem" data-goto="sin"><span class="ic">🛡️</span><span>الذنوب</span></div>
+    <div class="nitem" data-goto="pray"><span class="ic">🕌</span><span>الصلاة</span></div>
+  </div>
+
+</div>
+
+<!-- محرر الملاحظة (صفحة كاملة) -->
+<div class="note-editor" id="noteEditor">
+  <div class="editor-top">
+    <div class="left">
+      <div class="editor-icon" id="editorBack">‹</div>
+      <div class="meta" id="editorMeta">ملاحظة جديدة</div>
+    </div>
+    <div class="right">
+      <div class="editor-icon danger" id="editorDelete" style="display:none;">🗑️</div>
+      <div class="editor-icon" id="editorDone">✓</div>
+    </div>
+  </div>
+  <div class="editor-body">
+    <input type="text" class="editor-title" id="editorTitle" placeholder="العنوان">
+    <textarea class="editor-text" id="editorText" placeholder="اكتب أي تفاصيل تريدها هنا، بلا حدود..."></textarea>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <p id="confirmText">هل أنت متأكد؟</p>
+    <div class="row">
+      <button class="cancel" id="confirmCancel">إلغاء</button>
+      <button class="confirm" id="confirmOk">تأكيد</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept="application/json,.json">
+
+<script>
+const STORAGE_KEY = "rihla_app_data_v2";
+const CIRCUM_MINI = 2 * Math.PI * 24; // 150.79
+const CIRCUM_HERO = 2 * Math.PI * 62; // 389.56
+
+const SMOKING_STAGES = [
+  {hours:0, text:"البداية — كل دقيقة بدون تدخين انتصار جديد"},
+  {hours:20/60, text:"بعد 20 دقيقة: ضربات القلب وضغط الدم يبدآن بالتحسن"},
+  {hours:12, text:"بعد 12 ساعة: مستوى أول أكسيد الكربون في الدم يعود لطبيعته"},
+  {hours:24, text:"بعد يوم: خطر النوبة القلبية بدأ بالانخفاض"},
+  {hours:48, text:"بعد يومين: حاستا الشم والتذوق تتحسنان بشكل ملحوظ"},
+  {hours:72, text:"بعد 3 أيام: النيكوتين خرج تمامًا من الجسم، التنفس أسهل"},
+  {hours:24*14, text:"بعد أسبوعين: الدورة الدموية والرئتان تتحسنان بشكل واضح"},
+  {hours:24*30, text:"بعد شهر: السعال والتعب يقل بشكل كبير"},
+  {hours:24*90, text:"بعد 3 أشهر: وظائف الرئة تتحسن بوضوح أكبر"},
+  {hours:24*270, text:"بعد 9 أشهر: الرئتان تتعافيان بشكل كبير من التهيج"},
+  {hours:24*365, text:"بعد سنة: خطر أمراض القلب انخفض للنصف"},
+  {hours:24*365*5, text:"بعد 5 سنوات: خطر السكتة الدماغية يقترب من غير المدخن"},
+  {hours:24*365*10, text:"بعد 10 سنوات: خطر سرطان الرئة انخفض للنصف"}
+];
+
+function defaultData(){
+  return {
+    smoke:{ startTime: Date.now(), best:0, relapses:0, notes:[] },
+    sin:{ startTime: Date.now(), best:0, relapses:0, notes:[] },
+    pray:{ count:0, best:0, relapses:0, lastSuccessDay:null, lastSuccessDate:null, notes:[] }
+  };
+}
+
+/* ===== تخزين البيانات =====
+   إذا كان التطبيق يعمل داخل Capacitor (بعد التحويل لـ APK)، تُحفظ البيانات
+   كملف JSON حقيقي ومستقل في تخزين الجهاز عبر Capacitor Filesystem.
+   إذا كان يعمل في متصفح عادي (أثناء التجربة على الكمبيوتر/الهاتف)، يُستخدم
+   localStorage تلقائيًا كحل بديل دون أي تغيير في الشكل أو الوظائف. */
+
+const DATA_FILE_NAME = "rihla-data.json";
+function hasCapacitorFS(){
+  return !!(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem);
+}
+
+function mergeWithDefaults(parsed){
+  const def = defaultData();
+  return {
+    smoke: Object.assign({}, def.smoke, parsed.smoke),
+    sin: Object.assign({}, def.sin, parsed.sin),
+    pray: Object.assign({}, def.pray, parsed.pray)
+  };
+}
+
+function loadDataLocalStorageSync(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultData();
+    return mergeWithDefaults(JSON.parse(raw));
+  }catch(e){
+    console.error("فشل تحميل البيانات من localStorage", e);
+    return defaultData();
+  }
+}
+
+// تحميل ابتدائي فوري (لرسم الواجهة بدون انتظار) — يُستبدل لاحقًا بنتيجة الملف الحقيقي إذا توفر Capacitor
+let data = loadDataLocalStorageSync();
+
+async function loadDataAsync(){
+  if(hasCapacitorFS()){
+    try{
+      const { Filesystem, Directory } = window.Capacitor.Plugins;
+      const result = await Filesystem.readFile({
+        path: DATA_FILE_NAME,
+        directory: Directory.Data,
+        encoding: 'utf8'
+      });
+      const parsed = JSON.parse(result.data);
+      data = mergeWithDefaults(parsed);
+      render();
+      return;
+    }catch(e){
+      // لا يوجد ملف بعد (أول تشغيل) أو خطأ قراءة — نكمل بالبيانات الافتراضية/المحلية
+      console.warn("لم يتم العثور على ملف بيانات سابق عبر Capacitor، سيتم إنشاؤه عند أول حفظ.", e);
+    }
+  }
+}
+
+let saveQueued = false;
+function saveData(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }catch(e){
+    console.error("فشل الحفظ في localStorage", e);
+  }
+
+  if(hasCapacitorFS()){
+    // كتابة فعلية لملف مستقل في تخزين الجهاز (يبقى موجودًا حتى لو حُذف التطبيق ذاكرة المتصفح)
+    const { Filesystem, Directory, Encoding } = window.Capacitor.Plugins;
+    Filesystem.writeFile({
+      path: DATA_FILE_NAME,
+      data: JSON.stringify(data),
+      directory: Directory.Data,
+      encoding: 'utf8'
+    }).catch(e => {
+      console.error("فشل الحفظ في ملف Capacitor", e);
+      showToast("⚠️ تعذر حفظ الملف، تم الحفظ مؤقتًا فقط");
+    });
+  }
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function fmtDate(ts){
+  if(!ts) return "-";
+  return new Date(ts).toLocaleDateString('ar-EG', {day:'numeric', month:'short', year:'numeric'});
+}
+function fmtDateTime(ts){
+  if(!ts) return "-";
+  return new Date(ts).toLocaleDateString('ar-EG', {day:'numeric', month:'short'}) + " · " +
+         new Date(ts).toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'});
+}
+function daysBetween(startTs, nowTs){ return Math.floor((nowTs - startTs) / 86400000); }
+function hoursBetween(startTs, nowTs){ return (nowTs - startTs) / 3600000; }
+
+function getCurrentStage(hours){
+  let current = SMOKING_STAGES[0];
+  for(const stage of SMOKING_STAGES){
+    if(hours >= stage.hours) current = stage; else break;
+  }
+  return current;
+}
+
+function ringOffset(circumference, progress01){
+  const p = Math.max(0, Math.min(1, progress01));
+  return circumference * (1 - p);
+}
+// تقدّم بصري للحلقة: يمتلئ تدريجيًا كل 30 يومًا كـ"دورة"
+function cycleProgress(days){
+  return (days % 30) / 30;
+}
+
+function setText(id, val){ const el=document.getElementById(id); if(el) el.textContent = val; }
+
+function render(){
+  const now = Date.now();
+  const todayStr = new Date().toLocaleDateString('ar-EG', {weekday:'long', day:'numeric', month:'long'});
+  setText('todayLabel', todayStr);
+
+  // ===== التدخين =====
+  {
+    const s = data.smoke;
+    const hrs = hoursBetween(s.startTime, now);
+    const days = daysBetween(s.startTime, now);
+    setText('smoke-num', days);
+    setText('smoke-best', s.best);
+    setText('smoke-relapses', s.relapses);
+    setText('smoke-hours', Math.floor(hrs));
+    setText('smoke-since', fmtDate(s.startTime));
+    document.getElementById('smoke-stage').textContent = getCurrentStage(hrs).text;
+
+    document.getElementById('ringSmoke').setAttribute('stroke-dashoffset', ringOffset(CIRCUM_HERO, cycleProgress(days)));
+    document.getElementById('ringSmokeMini').setAttribute('stroke-dashoffset', ringOffset(CIRCUM_MINI, cycleProgress(days)));
+    setText('ringSmokeMiniNum', days);
+    setText('sumSmoke', days);
+    setText('smokeMetaHome', days + ' يوم · أفضل رقم ' + s.best);
+
+    renderNotes('smoke');
+  }
+
+  // ===== الذنوب =====
+  {
+    const s = data.sin;
+    const days = daysBetween(s.startTime, now);
+    setText('sin-num', days);
+    setText('sin-best', s.best);
+    setText('sin-relapses', s.relapses);
+    setText('sin-since', fmtDate(s.startTime));
+    setText('sin-notescount', (s.notes||[]).length);
+
+    document.getElementById('ringSin').setAttribute('stroke-dashoffset', ringOffset(CIRCUM_HERO, cycleProgress(days)));
+    document.getElementById('ringSinMini').setAttribute('stroke-dashoffset', ringOffset(CIRCUM_MINI, cycleProgress(days)));
+    setText('ringSinMiniNum', days);
+    setText('sumSin', days);
+    setText('sinMetaHome', days + ' يوم · أفضل رقم ' + s.best);
+
+    renderNotes('sin');
+  }
+
+  // ===== الصلاة =====
+  {
+    const s = data.pray;
+    setText('pray-num', s.count);
+    setText('pray-best', s.best);
+    setText('pray-relapses', s.relapses);
+    setText('pray-since', s.lastSuccessDate ? fmtDate(s.lastSuccessDate) : "-");
+    setText('pray-notescount', (s.notes||[]).length);
+
+    document.getElementById('ringPray').setAttribute('stroke-dashoffset', ringOffset(CIRCUM_HERO, cycleProgress(s.count)));
+    document.getElementById('ringPrayMini').setAttribute('stroke-dashoffset', ringOffset(CIRCUM_MINI, cycleProgress(s.count)));
+    setText('ringPrayMiniNum', s.count);
+    setText('sumPray', s.count);
+    setText('prayMetaHome', s.count + ' يوم · أفضل رقم ' + s.best);
+
+    renderNotes('pray');
+  }
+}
+
+function renderNotes(key){
+  const grid = document.getElementById('notes-' + key);
+  const notes = data[key].notes || [];
+  if(notes.length === 0){
+    grid.innerHTML = '<div class="notes-empty"><span class="e">📓</span>لا توجد ملاحظات بعد<br>اضغط + لإضافة أول ملاحظة</div>';
+    return;
+  }
+  const sorted = notes.slice().sort((a,b)=> (b.updatedAt||b.ts) - (a.updatedAt||a.ts));
+  grid.innerHTML = '';
+  sorted.forEach(n => {
+    const card = document.createElement('div');
+    card.className = 'note-card';
+    card.dataset.id = n.id;
+    card.dataset.key = key;
+    const title = document.createElement('div');
+    title.className = 'nt';
+    title.textContent = n.title && n.title.trim() ? n.title : '(بدون عنوان)';
+    const body = document.createElement('div');
+    body.className = 'nb';
+    body.textContent = n.text || '';
+    const dt = document.createElement('div');
+    dt.className = 'nd';
+    dt.textContent = fmtDateTime(n.updatedAt || n.ts);
+    card.appendChild(title);
+    card.appendChild(body);
+    card.appendChild(dt);
+    card.addEventListener('click', () => openEditor(key, n.id));
+    grid.appendChild(card);
+  });
+}
+
+/* ===== التنقل بين الصفحات ===== */
+function goTo(pageName){
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.dataset.page === pageName));
+  document.querySelectorAll('.bottomnav .nitem').forEach(n => n.classList.toggle('active', n.dataset.goto === pageName));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-goto]').forEach(el => {
+  el.addEventListener('click', () => goTo(el.getAttribute('data-goto')));
+});
+
+/* ===== محرر الملاحظات ===== */
+let editorState = { key:null, id:null };
+
+function openEditor(key, id){
+  editorState = { key, id: id || null };
+  const editor = document.getElementById('noteEditor');
+  const titleInput = document.getElementById('editorTitle');
+  const textInput = document.getElementById('editorText');
+  const meta = document.getElementById('editorMeta');
+  const delBtn = document.getElementById('editorDelete');
+
+  if(id){
+    const note = (data[key].notes||[]).find(n => n.id === id);
+    titleInput.value = note ? (note.title||'') : '';
+    textInput.value = note ? (note.text||'') : '';
+    meta.textContent = note ? ('آخر تعديل: ' + fmtDateTime(note.updatedAt||note.ts)) : '';
+    delBtn.style.display = 'flex';
+  }else{
+    titleInput.value = '';
+    textInput.value = '';
+    meta.textContent = 'ملاحظة جديدة';
+    delBtn.style.display = 'none';
+  }
+  editor.classList.add('show');
+  setTimeout(()=> titleInput.focus(), 50);
+}
+
+function closeEditorAndSave(){
+  const { key, id } = editorState;
+  if(!key) { closeEditorOnly(); return; }
+  const titleVal = document.getElementById('editorTitle').value.trim();
+  const textVal = document.getElementById('editorText').value;
+
+  if(!titleVal && !textVal.trim()){
+    closeEditorOnly();
+    return;
+  }
+
+  data[key].notes = data[key].notes || [];
+  const now = Date.now();
+  if(id){
+    const note = data[key].notes.find(n => n.id === id);
+    if(note){
+      note.title = titleVal;
+      note.text = textVal;
+      note.updatedAt = now;
+    }
+  }else{
+    data[key].notes.push({
+      id: now + '_' + Math.random().toString(36).slice(2,8),
+      title: titleVal,
+      text: textVal,
+      ts: now,
+      updatedAt: now
+    });
+  }
+  saveData();
+  renderNotes(key);
+  render();
+  closeEditorOnly();
+}
+
+function closeEditorOnly(){
+  document.getElementById('noteEditor').classList.remove('show');
+  editorState = { key:null, id:null };
+}
+
+document.querySelectorAll('[data-new-note]').forEach(btn => {
+  btn.addEventListener('click', () => openEditor(btn.getAttribute('data-new-note'), null));
+});
+document.getElementById('editorDone').addEventListener('click', closeEditorAndSave);
+document.getElementById('editorBack').addEventListener('click', closeEditorAndSave);
+document.getElementById('editorDelete').addEventListener('click', () => {
+  const { key, id } = editorState;
+  if(!key || !id) return;
+  askConfirm('هل تريد حذف هذه الملاحظة نهائيًا؟', () => {
+    data[key].notes = (data[key].notes||[]).filter(n => n.id !== id);
+    saveData();
+    renderNotes(key);
+    render();
+    closeEditorOnly();
+    showToast('تم حذف الملاحظة');
+  });
+});
+
+/* ===== نظام التأكيد العام ===== */
+let pendingAction = null;
+function askConfirm(text, onConfirm){
+  pendingAction = onConfirm;
+  document.getElementById('confirmText').textContent = text;
+  document.getElementById('confirmModal').classList.add('show');
+}
+document.getElementById('confirmCancel').addEventListener('click', () => {
+  document.getElementById('confirmModal').classList.remove('show');
+  pendingAction = null;
+});
+document.getElementById('confirmOk').addEventListener('click', () => {
+  document.getElementById('confirmModal').classList.remove('show');
+  if(pendingAction) pendingAction();
+  pendingAction = null;
+});
+
+/* ===== أفعال العدادات ===== */
+document.querySelectorAll('[data-action]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const action = btn.getAttribute('data-action');
+
+    if(action === 'relapse-smoke'){
+      askConfirm('هل تؤكد تسجيل انتكاسة في التدخين؟ سيُعاد العداد للصفر.', () => {
+        const days = daysBetween(data.smoke.startTime, Date.now());
+        data.smoke.best = Math.max(data.smoke.best, days);
+        data.smoke.relapses += 1;
+        data.smoke.startTime = Date.now();
+        saveData(); render();
+        showToast('تم تسجيل الانتكاسة، البداية من جديد 💪');
+      });
+    }
+
+    if(action === 'relapse-sin'){
+      askConfirm('هل تؤكد ارتكاب الذنب؟ سيُصفّر العداد.', () => {
+        const days = daysBetween(data.sin.startTime, Date.now());
+        data.sin.best = Math.max(data.sin.best, days);
+        data.sin.relapses += 1;
+        data.sin.startTime = Date.now();
+        saveData(); render();
+        showToast('تم التصفير، لا تيأس وابدأ من جديد');
+      });
+    }
+
+    if(action === 'success-pray'){
+      const today = new Date().toDateString();
+      if(data.pray.lastSuccessDay === today){
+        showToast('تم تسجيل اليوم مسبقًا ✔️');
+        return;
+      }
+      data.pray.count += 1;
+      data.pray.lastSuccessDay = today;
+      data.pray.lastSuccessDate = Date.now();
+      data.pray.best = Math.max(data.pray.best, data.pray.count);
+      saveData(); render();
+      showToast('بارك الله فيك 🌿');
+    }
+
+    if(action === 'relapse-pray'){
+      askConfirm('هل تؤكد التأخر عن أول وقت الصلاة؟ سيُصفّر العداد.', () => {
+        data.pray.best = Math.max(data.pray.best, data.pray.count);
+        data.pray.relapses += 1;
+        data.pray.count = 0;
+        data.pray.lastSuccessDay = null;
+        saveData(); render();
+        showToast('تم التصفير، حاول في الصلاة القادمة');
+      });
+    }
+  });
+});
+
+/* ===== تصدير / استيراد ===== */
+function exportData(){
+  try{
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+    a.href = url;
+    a.download = `rihla-backup-${stamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('تم حفظ النسخة كملف ✔️');
+  }catch(e){
+    showToast('⚠️ فشل التصدير');
+    console.error(e);
+  }
+}
+document.getElementById('btnExportTop').addEventListener('click', exportData);
+
+document.getElementById('btnImportTop').addEventListener('click', () => {
+  document.getElementById('fileInput').click();
+});
+document.getElementById('fileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    try{
+      const parsed = JSON.parse(evt.target.result);
+      if(!parsed.smoke || !parsed.sin || !parsed.pray) throw new Error('ملف غير صالح');
+      askConfirm('سيتم استبدال جميع البيانات الحالية بالبيانات من هذا الملف. متابعة؟', () => {
+        const def = defaultData();
+        data = {
+          smoke: Object.assign({}, def.smoke, parsed.smoke),
+          sin: Object.assign({}, def.sin, parsed.sin),
+          pray: Object.assign({}, def.pray, parsed.pray)
+        };
+        saveData(); render();
+        showToast('تم استيراد البيانات بنجاح ✔️');
+      });
+    }catch(err){
+      showToast('⚠️ ملف غير صالح أو تالف');
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+/* ===== الوضع الليلي / النهاري ===== */
+const THEME_KEY = "rihla_theme_v1";
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('btnThemeToggle').textContent = theme === 'light' ? '☀️' : '🌙';
+}
+function loadTheme(){
+  try{
+    return localStorage.getItem(THEME_KEY) || 'dark';
+  }catch(e){ return 'dark'; }
+}
+let currentTheme = loadTheme();
+applyTheme(currentTheme);
+document.getElementById('btnThemeToggle').addEventListener('click', () => {
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  applyTheme(currentTheme);
+  try{ localStorage.setItem(THEME_KEY, currentTheme); }catch(e){}
+});
+
+setInterval(render, 60000);
+render();
+loadDataAsync(); // يحاول تحميل الملف الحقيقي من تخزين الجهاز إذا كان التطبيق يعمل عبر Capacitor
+</script>
+</body>
+</html>
